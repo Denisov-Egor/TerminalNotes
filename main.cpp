@@ -95,7 +95,7 @@ public:
   
 void CreateNote(NoteManager& manager)
 {
-   if (manager.isFull())
+  if (manager.isFull())
   {
     std::cout << "Ошибка: хранилище заметок заполнено.\n";
     return;
@@ -107,10 +107,16 @@ void CreateNote(NoteManager& manager)
   std::string content;
 
   std::cout << "Введите заголовок: ";
-  std::getline(std::cin, title);
+  if (!std::getline(std::cin, title))
+  {
+    return;
+  }
 
   std::cout << "Введите содержимое: ";
-  std::getline(std::cin, content);
+  if (!std::getline(std::cin, content))
+  {
+    return;
+  }
 
   note.setTitle(title);
   note.setContent(content);
@@ -163,10 +169,23 @@ void OpenNote(const NoteManager& manager)
     return;
   }
 
-  int index;
+  int index = -1;
 
   std::cout << "Введите индекс заметки: ";
-  std::cin >> index;
+  
+  if (!(std::cin >> index))
+  {
+    if (std::cin.eof())
+    {
+      return;
+    }
+
+    std::cin.clear();
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+    std::cout << "Ошибка: необходимо ввести число.\n";
+    return;
+  }
 
   const Note* note = manager.getNote(index);
 
@@ -198,7 +217,21 @@ int main()
   while (choice != 0)
   {
     Menu();
-    std::cin >> choice;
+
+    if (!(std::cin >> choice))
+    {
+      if (std::cin.eof())
+      {
+        std::cout << "\nЗавершение программы.\n";
+        break;
+      }
+
+      std::cin.clear();
+      std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+      std::cout << "Ошибка: необходимо ввести число.\n";
+      continue;
+    }
 
     switch (choice)
     {
@@ -223,7 +256,10 @@ int main()
       std::cout << "Неверный пункт меню: ";
       break;
     }
+     
+    if (std::cin.eof())
+    {
+      break;
+    }
   }
-  
-
 }
