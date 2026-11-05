@@ -123,7 +123,38 @@ void CreateNote(NoteManager& manager)
     std::cout << "Ошибка: не удалось добавить заметку.\n";
   }
 }
- 
+
+void ShowNotes(const NoteManager& manager)
+{
+  if (manager.isEmpty())
+  {
+    std::cout << "Ошибка: заметки пока не созданы.\n";
+    return;
+  }
+  
+  int noteCount = manager.getNoteCount();
+
+  std::cout << R"(
+  ====================================
+                NOTES
+  ====================================
+  )";
+
+  for (int index = 0; index < noteCount; ++index)
+  {
+    const Note* note = manager.getNote(index);
+
+    if (note == nullptr)
+    {
+      continue;
+    }
+
+    std::cout << "[" << index << "] " << note->getTitle() << '\n';
+  }
+  
+  std::cout << "====================================\n";
+}
+
 int main()
 {
   int choice = -1;
@@ -142,7 +173,7 @@ int main()
       break;
     
     case 2:
-      
+      ShowNotes(manager);
       break;
     
     case 3:
