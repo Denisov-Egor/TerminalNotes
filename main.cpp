@@ -27,24 +27,22 @@ private:
   std::string title = "Новый заголовок";
   std::string content;
 public:
-  bool setTitle(const std::string& newTitle)
-  {  
+  void setTitle(const std::string& newTitle)
+  {
     title = newTitle;
-    return true;
   }
 
-  bool setContent(const std::string& newContent)
+  void setContent(const std::string& newContent)
   {
     content = newContent;
-    return true;
   }
 
-  std::string getTitle() const
+  const std::string& getTitle() const
   {
     return title;
   }
 
-  std::string getContent() const
+  const std::string& getContent() const
   {
     return content;
   }
@@ -58,7 +56,7 @@ private:
 public:
   bool isEmpty() const
   {
-    return noteCount <= 0;
+    return noteCount == 0;
   }
 
   bool isFull() const
@@ -79,7 +77,7 @@ public:
     }
     
     notes[noteCount] = note;
-    noteCount++;
+    ++noteCount;
 
     return true;
   }
