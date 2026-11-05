@@ -155,6 +155,41 @@ void ShowNotes(const NoteManager& manager)
   std::cout << "====================================\n";
 }
 
+void OpenNote(const NoteManager& manager)
+{
+  if (manager.isEmpty())
+  {
+    std::cout << "Ошибка: заметки пока не созданы.\n";
+    return;
+  }
+
+  int index;
+
+  std::cout << "Введите индекс заметки: ";
+  std::cin >> index;
+
+  const Note* note = manager.getNote(index);
+
+  if (note == nullptr)
+  {
+    std::cout << "Ошибка: заметка с таким индексом не найдена.\n";
+    return;
+  }
+
+  std::cout << R"(
+  ====================================
+               OPEN NOTE
+  ====================================
+  )";
+
+  std::cout << "Заголовок: " << note->getTitle() << "\n\n";
+  std::cout << "Содержимое:\n";
+  std::cout << note->getContent() << '\n';
+
+  std::cout << "====================================\n";
+
+}
+
 int main()
 {
   int choice = -1;
@@ -177,7 +212,7 @@ int main()
       break;
     
     case 3:
-      
+      OpenNote(manager);
       break;
     
     case 0:
