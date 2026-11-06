@@ -7,17 +7,29 @@
 void Menu()
 {
   std::cout << R"(
-  ====================================
-           TERMINAL NOTES
-  ====================================
+  ==========================================
+                TERMINAL NOTES
+  ==========================================
 
-    1. Создать заметку
-    2. Показать все заметки
-    3. Открыть заметку
+  [ ЗАМЕТКИ ]
 
-    0. Выход
+  1. Создать заметку
+  2. Показать все заметки
+  3. Открыть заметку
+  4. Редактировать заметку
+  5. Удалить заметку
+  6. Найти заметку
 
-  ====================================
+  [ ФАЙЛЫ ]
+
+  7. Загрузить заметки из файла
+  8. Сохранить заметки в файл
+
+  [ ПРОГРАММА ]
+
+  0. Выход
+
+  ==========================================
 
   Выберите действие:
   )";
@@ -93,6 +105,11 @@ public:
     
     return &notes[index];
   }
+
+  void clear()
+  {
+    noteCount = 0;
+  }
 };
   
 void CreateNote(NoteManager& manager)
@@ -107,6 +124,7 @@ void CreateNote(NoteManager& manager)
 
   std::string title;
   std::string content;
+  std::string line;
 
   std::cout << "Введите заголовок: ";
   if (!std::getline(std::cin, title))
@@ -114,10 +132,24 @@ void CreateNote(NoteManager& manager)
     return;
   }
 
-  std::cout << "Введите содержимое: ";
-  if (!std::getline(std::cin, content))
+  std::cout << "Введите содержимое (для завершения введите точку .):\n";
+
+  bool firstLine = true;
+
+  while (std::getline(std::cin, line))
   {
-    return;
+    if (line == ".")
+    {
+      break;
+    }
+
+    if (!firstLine)
+    {
+      content += '\n';
+    }
+
+    content += line;
+    firstLine = false;
   }
 
   note.setTitle(title);
@@ -262,6 +294,106 @@ bool SaveNotes(const NoteManager& manager)
   return true;
 }
 
+bool LoadNotes(NoteManager& manager)
+{
+  std::string marker;
+  std::string title;
+  std::string content;
+
+  NoteManager tempManager;
+
+  std::ifstream file("notes.txt");
+
+  if (!file.is_open())
+  {
+    return false;
+  }
+  
+  while (std::getline(file, marker))
+  {
+    if (marker.empty())
+    {
+      continue;
+    }
+    
+    if (marker != "[NOTE]")
+    {
+      return false;
+    }
+    
+    if (!std::getline(file, title))
+    {
+      return false;
+    }
+    
+    if (title == "Заголовок пуст")
+    {
+      title.clear();
+    }
+
+    content.clear();
+
+    bool firstLine = true;
+
+    while (std::getline(file, marker) && marker != "[END]")
+    {
+      if (!firstLine)
+      {
+        content += '\n';
+      }
+
+      content += marker;
+      firstLine = false;
+    }
+
+    if (marker != "[END]")
+    {
+      return false;
+    }
+
+    if (content == "Содержание пуст")
+    {
+      content.clear();
+    }
+
+    Note note;
+
+    note.setTitle(title);
+    note.setContent(content);
+
+    if (!tempManager.addNote(note))
+    {
+      return false;
+    }
+  }
+  
+  if (file.bad())
+  {
+    return false;
+  }
+
+  manager.clear();
+
+  int noteCount = tempManager.getNoteCount();
+
+  for (int index = 0; index < noteCount; ++index)
+  {
+    const Note* note = tempManager.getNote(index);
+
+    if (note == nullptr)
+    {
+      return false;
+    }
+
+    if (!manager.addNote(*note))
+    {
+      return false;
+    }
+  }
+
+  return true;
+}
+
 int main()
 {
   int choice = -1;
@@ -301,6 +433,38 @@ int main()
 
     case 3:
       OpenNote(manager);
+      break;
+
+    case 4:
+
+      break;
+
+    case 5:
+
+      break;
+
+    case 6:
+
+      break;
+
+    case 7:
+      if (LoadNotes(manager))
+      {
+        std::cout << "Заметки успешно загружены.\n";
+      }else
+      {
+        std::cout << "Ошибка: не удалось загрузить заметки.\n";
+      }      
+      break;
+
+    case 8:
+      if (SaveNotes(manager))
+      {
+        std::cout << "Заметки успешно сохранены.\n";
+      }else
+      {
+        std::cout << "Ошибка: не удалось сохранить заметки.\n";
+      }
       break;
 
     case 0:
