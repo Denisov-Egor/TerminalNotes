@@ -1,4 +1,6 @@
 #include <iostream>
+#include <fstream>
+
 #include <string>
 #include <limits>
 
@@ -207,6 +209,57 @@ void OpenNote(const NoteManager& manager)
 
   std::cout << "====================================\n";
 
+}
+
+bool SaveNotes(const NoteManager& manager)
+{
+  std::ofstream file("notes.txt");
+
+  if (!file.is_open())
+  {
+    return false;
+  }
+  
+  int noteCount = manager.getNoteCount();
+
+  for (int index = 0; index < noteCount; ++index)
+  {
+    const Note* note = manager.getNote(index);
+
+    if (note == nullptr)
+    {
+      return false;
+    }
+    
+    file << "[NOTE]\n";
+
+    if (note->getTitle().empty())
+    {
+      file << "Заголовок пуст\n";
+    }else
+    {
+      file << note->getTitle() << '\n';
+    }
+    
+    if (note->getContent().empty())
+    {
+      file << "Содержание пуст\n";
+    }else
+    {
+      file << note->getContent() << '\n';
+    }
+    
+    file << "[END]\n\n";
+  }
+
+  file.close();
+  
+  if (!file)
+  {
+    return false;
+  }
+
+  return true;
 }
 
 int main()
