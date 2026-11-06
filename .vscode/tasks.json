@@ -1,0 +1,28 @@
+
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build Terminal Notes",
+      "type": "shell",
+      "command": "g++",
+      "args": [
+        "-std=c++20",
+        "-g",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "${workspaceFolder}/main.cpp",
+        "-o",
+        "${workspaceFolder}/terminal-notes"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": [
+        "$gcc"
+      ]
+    }
+  ]
+}
