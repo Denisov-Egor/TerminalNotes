@@ -229,6 +229,8 @@ int main()
       std::cin.clear();
       std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
+      choice = -1;
+
       std::cout << "Ошибка: необходимо ввести число.\n";
       continue;
     }
@@ -239,26 +241,27 @@ int main()
       std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
       CreateNote(manager);
       break;
-    
+
     case 2:
       ShowNotes(manager);
       break;
-    
+
     case 3:
       OpenNote(manager);
       break;
-    
+
     case 0:
-      std::cout << "Выход.";
+      std::cout << "Выход.\n";
       break;
-    
+
     default:
-      std::cout << "Неверный пункт меню: ";
+      std::cout << "Неверный пункт меню.\n";
       break;
     }
-     
+
     if (std::cin.eof())
     {
+      std::cout << "\nЗавершение программы.\n";
       break;
     }
   }
