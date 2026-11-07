@@ -106,6 +106,23 @@ public:
     return &notes[index];
   }
 
+  bool removeNote(int index)
+  {
+    if (index < 0 || index >= noteCount)
+    {
+      return false;
+    }
+    
+    for (int i = index; i < noteCount - 1; i++)
+    {
+      notes[i] = notes[i + 1];
+    }
+    
+    --noteCount;
+
+    return true;
+  }
+
   void clear()
   {
     noteCount = 0;
@@ -440,7 +457,39 @@ int main()
       break;
 
     case 5:
+    {
+      if (manager.isEmpty())
+      {
+        std::cout << "Ошибка: заметки пока не созданы.\n";
+        break;
+      }
 
+      int index = -1;
+
+      std::cout << "Введите индекс заметки для удаления: ";
+
+      if (!(std::cin >> index))
+      {
+        if (std::cin.eof())
+        {
+          break;
+        }
+
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+        std::cout << "Ошибка: необходимо ввести число.\n";
+        break;
+      }
+
+      if (manager.removeNote(index))
+      {
+        std::cout << "Заметка успешно удалена.\n";
+      }else
+      {
+        std::cout << "Ошибка: заметка с таким индексом не найдена.\n";
+      }
+    }
       break;
 
     case 6:
