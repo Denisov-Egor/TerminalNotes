@@ -482,15 +482,48 @@ int main()
         break;
       }
 
-      if (manager.removeNote(index))
-      {
-        std::cout << "Заметка успешно удалена.\n";
-      }else
+      const Note* note = manager.getNote(index);
+
+      if (note == nullptr)
       {
         std::cout << "Ошибка: заметка с таким индексом не найдена.\n";
+        break;
       }
-    }
+
+      std::cout << "\nВы действительно хотите удалить заметку [" << index << "]?\n";
+      std::cout << "Заголовок: " << note->getTitle() << '\n';
+
+      char confirmation;
+
+      std::cout << "Подтвердить удаление? (y/n): ";
+
+      if (!(std::cin >> confirmation))
+      {
+        break;
+      }
+
+      if (confirmation == 'y' || confirmation == 'Y')
+      {
+        if (manager.removeNote(index))
+        {
+          std::cout << "Заметка успешно удалена.\n";
+        }
+        else
+        {
+          std::cout << "Ошибка при удалении заметки.\n";
+        }
+      }
+      else if (confirmation == 'n' || confirmation == 'N')
+      {
+        std::cout << "Удаление отменено.\n";
+      }
+      else
+      {
+        std::cout << "Ошибка: введите y или n.\n";
+      }
+
       break;
+    }
 
     case 6:
 
