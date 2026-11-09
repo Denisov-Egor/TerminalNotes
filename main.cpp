@@ -35,6 +35,21 @@ void Menu()
   )";
 }
 
+void EditMenu()
+{
+  std::cout << R"(
+  ====================================
+          РЕДАКТИРОВАНИЕ
+  ====================================
+
+  1. Изменить заголовок
+  2. Изменить содержимое
+  0. Отмена
+
+  Выберите действие:
+  )";
+}
+
 class Note
 {
 private:
@@ -126,6 +141,16 @@ public:
   void clear()
   {
     noteCount = 0;
+  }
+
+  Note* getNote(int index)
+  {
+    if (index < 0 || index >= noteCount)
+    {
+      return nullptr;
+    }
+
+    return &notes[index];
   }
 };
   
@@ -415,6 +440,7 @@ int main()
 {
   int choice = -1;
   NoteManager manager;
+  int index = -1;
 
   while (choice != 0)
   {
@@ -453,7 +479,73 @@ int main()
       break;
 
     case 4:
+    {
+      if (manager.isEmpty())
+      {
+        std::cout << "Ошибка: нету заметок.\n";
+        break;
+      }
+      
+      std::cout << "Введите индекс заметки: ";
+      if (!(std::cin >> index))
+      {
+        if (std::cin.eof())
+        {
+          break;
+        }
 
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+        std::cout << "Ошибка: необходимо ввести число.\n";
+        break;
+      }
+
+      Note* note = manager.getNote(index);
+
+      if (note == nullptr)
+      {
+        std::cout << "Ошибка: заметка с таким индексом не найдена.\n";
+        break;
+      }
+
+      EditMenu();
+
+      int editChoice = -1;
+
+      if (!(std::cin >> editChoice))
+      {
+        if (std::cin.eof())
+        {
+          break;
+        }
+
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+        std::cout << "Ошибка: необходимо ввести число.\n";
+        break;
+      }
+
+      switch (editChoice)
+      {
+        case 1:
+          
+          break;
+
+        case 2:
+
+          break;
+
+        case 0:
+
+          break;
+
+        default:
+          std::cout << "Неверный пункт меню.\n";
+          break;
+      }
+    }
       break;
 
     case 5:
